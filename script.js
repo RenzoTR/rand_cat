@@ -8,22 +8,28 @@ const images = [
   "./assets/images/gato7.jpg",
 ];
 
-// URLs alternativas de áudios de gatos de diferentes fontes
+// URLs diretas dos MP3 do MyInstants (extraídas das páginas)
 const audios = [
-  // SoundBible - arquivos diretos
-  "https://soundbible.com/mp3/Cat_Meow-Cat_Stevens-2034822903.mp3",
-  "https://soundbible.com/mp3/Cat Meow 2-Cat Stevens-2034822903.mp3",
-  "https://soundbible.com/mp3/Angry_Cat-SoundBible.com-2127166236.mp3",
-  // Backup com sons alternativos caso os anteriores falhem
-  "https://orangefreesounds.com/wp-content/uploads/2022/04/Cat-meow-sound-effect.mp3",
-  "https://orangefreesounds.com/wp-content/uploads/2022/05/Angry-cat-sound-effect.mp3",
-  "https://orangefreesounds.com/wp-content/uploads/2022/05/Cute-cat-meow-sound-effect.mp3",
+  "https://www.myinstants.com/media/sounds/gato-riendo.mp3",
+  "https://www.myinstants.com/media/sounds/gato-miando-panico-na-tv.mp3",
+  "https://www.myinstants.com/media/sounds/gato-miau.mp3",
+  "https://www.myinstants.com/media/sounds/gato_9UAlUDt.mp3",
+  "https://www.myinstants.com/media/sounds/gato-sad.mp3",
+  "https://www.myinstants.com/media/sounds/mu-hehehe-cat-meme.mp3",
 ];
 
 const drawButton = document.getElementById("draw-button");
 const cardImage = document.getElementById("card-image");
 const cardCaption = document.getElementById("card-caption");
-const cardAudio = document.getElementById("card-audio");
+let cardAudio = document.getElementById("card-audio");
+
+// Se o elemento de áudio não existir, cria um
+if (!cardAudio) {
+  cardAudio = new Audio();
+  cardAudio.id = "card-audio";
+  cardAudio.preload = "auto";
+  document.body.appendChild(cardAudio);
+}
 
 const starsContainer = document.querySelector(".stars");
 
@@ -47,24 +53,28 @@ const createStars = (count = 45) => {
 
 createStars();
 
-const playAudio = async (audioUrl) => {
-  try {
-    // Limpa o áudio anterior
-    cardAudio.pause();
-    cardAudio.currentTime = 0;
-    
-    // Configura novo áudio
-    cardAudio.src = audioUrl;
-    cardAudio.volume = 0.7; // Volume a 70%
-    
-    // Aguarda carregar e reproduz
-    await cardAudio.load();
-    await cardAudio.play();
-    
-    cardCaption.textContent = "Carta revelada!";
-  } catch (error) {
-    console.warn("Áudio bloqueado ou erro ao carregar:", error);
-    cardCaption.textContent = "Carta revelada! (Áudio pode estar bloqueado)";
+const playAudio = (audioUrl) => {
+  // Para qualquer áudio em reprodução
+  cardAudio.pause();
+  cardAudio.currentTime = 0;
+  
+  // Define a nova fonte
+  cardAudio.src = audioUrl;
+  cardAudio.volume = 0.8; // Volume a 80%
+  
+  // Tenta reproduzir
+  const playPromise = cardAudio.play();
+  
+  if (playPromise !== undefined) {
+    playPromise
+      .then(() => {
+        console.log("Áudio reproduzindo com sucesso!");
+        cardCaption.textContent = "Carta revelada!";
+      })
+      .catch((error) => {
+        console.warn("Áudio bloqueado:", error);
+        cardCaption.textContent = "Carta revelada! (Clique novamente se o áudio não tocar)";
+      });
   }
 };
 
@@ -80,5 +90,5 @@ const revealCard = () => {
   playAudio(audio);
 };
 
-// Habilita reprodução automática após primeira interação
+// Adiciona o evento ao botão
 drawButton.addEventListener("click", revealCard);
