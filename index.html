@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Retirar Carta</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="landing">
+    <section class="card">
+      <h1>Retire sua carta</h1>
+      <p>Uma carta será revelada junto com um som surpresa.</p>
+      <button id="draw-button" type="button">retirar carta</button>
+
+      <div class="result" aria-live="polite">
+        <figure class="result__image">
+          <img id="card-image" alt="Carta sorteada" />
+          <figcaption id="card-caption">Clique no botão para revelar.</figcaption>
+        </figure>
+
+        <div class="result__audio">
+          <audio id="card-audio" controls></audio>
+          <a id="audio-link" href="#" target="_blank" rel="noreferrer">Abrir áudio em nova aba</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="stars" aria-hidden="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
