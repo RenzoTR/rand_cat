@@ -21,7 +21,6 @@ const drawButton = document.getElementById("draw-button");
 const cardImage = document.getElementById("card-image");
 const cardCaption = document.getElementById("card-caption");
 const cardAudio = document.getElementById("card-audio");
-const audioLink = document.getElementById("audio-link");
 
 const starsContainer = document.querySelector(".stars");
 
@@ -53,11 +52,11 @@ const revealCard = () => {
   cardImage.alt = "Carta sorteada";
   cardCaption.textContent = "Carta revelada!";
 
+  // Reproduz o áudio automaticamente
   cardAudio.src = audio;
   cardAudio.play().catch(() => {
-    cardCaption.textContent = "Carta revelada! Clique no play para ouvir o áudio.";
+    cardCaption.textContent = "Carta revelada! (O áudio pode não tocar automaticamente neste navegador)";
   });
-  audioLink.href = audio;
 };
 
 drawButton.addEventListener("click", revealCard);
