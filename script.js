@@ -8,14 +8,16 @@ const images = [
   "./assets/images/gato7.jpg",
 ];
 
-// URLs diretas de áudios de gatos (MP3/OGG que funcionam diretamente)
+// URLs alternativas de áudios de gatos de diferentes fontes
 const audios = [
-  "https://cdn.freesound.org/previews/634/634277_11861866-lq.mp3",
-  "https://cdn.freesound.org/previews/634/634274_11861866-lq.mp3",
-  "https://cdn.freesound.org/previews/634/634276_11861866-lq.mp3",
-  "https://cdn.freesound.org/previews/138/138562_2538033-lq.mp3",
-  "https://cdn.freesound.org/previews/221/221537_3954942-lq.mp3",
-  "https://cdn.freesound.org/previews/634/634279_11861866-lq.mp3",
+  // SoundBible - arquivos diretos
+  "https://soundbible.com/mp3/Cat_Meow-Cat_Stevens-2034822903.mp3",
+  "https://soundbible.com/mp3/Cat Meow 2-Cat Stevens-2034822903.mp3",
+  "https://soundbible.com/mp3/Angry_Cat-SoundBible.com-2127166236.mp3",
+  // Backup com sons alternativos caso os anteriores falhem
+  "https://orangefreesounds.com/wp-content/uploads/2022/04/Cat-meow-sound-effect.mp3",
+  "https://orangefreesounds.com/wp-content/uploads/2022/05/Angry-cat-sound-effect.mp3",
+  "https://orangefreesounds.com/wp-content/uploads/2022/05/Cute-cat-meow-sound-effect.mp3",
 ];
 
 const drawButton = document.getElementById("draw-button");
@@ -45,25 +47,38 @@ const createStars = (count = 45) => {
 
 createStars();
 
+const playAudio = async (audioUrl) => {
+  try {
+    // Limpa o áudio anterior
+    cardAudio.pause();
+    cardAudio.currentTime = 0;
+    
+    // Configura novo áudio
+    cardAudio.src = audioUrl;
+    cardAudio.volume = 0.7; // Volume a 70%
+    
+    // Aguarda carregar e reproduz
+    await cardAudio.load();
+    await cardAudio.play();
+    
+    cardCaption.textContent = "Carta revelada!";
+  } catch (error) {
+    console.warn("Áudio bloqueado ou erro ao carregar:", error);
+    cardCaption.textContent = "Carta revelada! (Áudio pode estar bloqueado)";
+  }
+};
+
 const revealCard = () => {
   const image = randomItem(images);
   const audio = randomItem(audios);
 
+  // Atualiza imagem
   cardImage.src = image;
   cardImage.alt = "Carta sorteada";
-  cardCaption.textContent = "Carta revelada!";
-
-  // Configura e reproduz o áudio automaticamente
-  cardAudio.src = audio;
-  cardAudio.load(); // Força o carregamento do áudio
   
-  // Tenta reproduzir após um pequeno delay para garantir carregamento
-  setTimeout(() => {
-    cardAudio.play().catch((error) => {
-      console.warn("Áudio bloqueado pelo navegador:", error);
-      cardCaption.textContent = "Carta revelada! (Áudio pode estar bloqueado pelo navegador)";
-    });
-  }, 100);
+  // Reproduz áudio
+  playAudio(audio);
 };
 
+// Habilita reprodução automática após primeira interação
 drawButton.addEventListener("click", revealCard);
