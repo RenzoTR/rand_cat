@@ -8,13 +8,14 @@ const images = [
   "./assets/images/gato7.jpg",
 ];
 
+// URLs diretas de áudios de gatos (MP3/OGG que funcionam diretamente)
 const audios = [
-  "https://www.myinstants.com/pt/instant/gato-riendo-57456/?utm_source=copy&utm_medium=share",
-  "https://www.myinstants.com/pt/instant/gato-miando-panico-na-tv/?utm_source=copy&utm_medium=share",
-  "https://www.myinstants.com/pt/instant/gato-miau-29437/?utm_source=copy&utm_medium=share",
-  "https://www.myinstants.com/pt/instant/gato/?utm_source=copy&utm_medium=share",
-  "https://www.myinstants.com/pt/instant/gato-sad-25756/?utm_source=copy&utm_medium=share",
-  "https://www.myinstants.com/pt/instant/mu-hehehe-cat-meme-68900/?utm_source=copy&utm_medium=share",
+  "https://cdn.freesound.org/previews/634/634277_11861866-lq.mp3",
+  "https://cdn.freesound.org/previews/634/634274_11861866-lq.mp3",
+  "https://cdn.freesound.org/previews/634/634276_11861866-lq.mp3",
+  "https://cdn.freesound.org/previews/138/138562_2538033-lq.mp3",
+  "https://cdn.freesound.org/previews/221/221537_3954942-lq.mp3",
+  "https://cdn.freesound.org/previews/634/634279_11861866-lq.mp3",
 ];
 
 const drawButton = document.getElementById("draw-button");
@@ -52,11 +53,17 @@ const revealCard = () => {
   cardImage.alt = "Carta sorteada";
   cardCaption.textContent = "Carta revelada!";
 
-  // Reproduz o áudio automaticamente
+  // Configura e reproduz o áudio automaticamente
   cardAudio.src = audio;
-  cardAudio.play().catch(() => {
-    cardCaption.textContent = "Carta revelada! (O áudio pode não tocar automaticamente neste navegador)";
-  });
+  cardAudio.load(); // Força o carregamento do áudio
+  
+  // Tenta reproduzir após um pequeno delay para garantir carregamento
+  setTimeout(() => {
+    cardAudio.play().catch((error) => {
+      console.warn("Áudio bloqueado pelo navegador:", error);
+      cardCaption.textContent = "Carta revelada! (Áudio pode estar bloqueado pelo navegador)";
+    });
+  }, 100);
 };
 
 drawButton.addEventListener("click", revealCard);
